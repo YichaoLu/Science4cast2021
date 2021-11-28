@@ -192,8 +192,10 @@ def main():
     args.num_node_features = valid_node_features.shape[1]
     args.num_pairwise_features = valid_pairwise_features.shape[1]
 
-    valid_node_features = (valid_node_features - train_node_mean) / train_node_std
-    valid_pairwise_features = (valid_pairwise_features - train_pairwise_mean) / train_pairwise_std
+    gnn_stats = np.load('cache/gnn_stats.npz')
+
+    valid_node_features = (valid_node_features - gnn_stats['train_node_mean']) / gnn_stats['train_node_std']
+    valid_pairwise_features = (valid_pairwise_features - gnn_stats['train_pairwise_mean']) / gnn_stats['train_pairwise_std']
     valid_pairwise_features = np.nan_to_num(valid_pairwise_features, nan=0.0)
 
     valid_node_features = torch.from_numpy(valid_node_features).cuda()
